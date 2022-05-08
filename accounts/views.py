@@ -16,8 +16,9 @@ class AccountsView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = []
 
-    def get(self, request: Request):
-        serializer = StudentUser(request.user)
+    def get(self, _: Request):
+        students = StudentUser.objects.all()
+        serializer = RegisterUserSerialiser(students, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
