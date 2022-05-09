@@ -44,3 +44,4 @@ class StudentUser(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+    address = models.ForeignKey('adresses.Address',null=True, on_delete=models.CASCADE, related_name='users')

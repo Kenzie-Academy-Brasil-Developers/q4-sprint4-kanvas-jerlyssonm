@@ -1,3 +1,4 @@
+from urllib import request
 from django.contrib.auth import authenticate
 from .serializers import LoginUserSerializer, RegisterUserSerialiser
 
@@ -6,8 +7,9 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated 
 
 from accounts.models import StudentUser
 
@@ -16,13 +18,19 @@ class AccountsView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = []
 
-    def get(self, _: Request):
-        students = StudentUser.objects.all()
-        serializer = RegisterUserSerialiser(students, many=True)
+    def get(self, request: Request):
+        self.permission_classes.append(IsAuthenticated)
+        userOn = request.user
+        if userOn.is_admin:
+            students = StudentUser.objects.all()
+            onlyStudents = students.filter(is_admin = False)
+            serializer = RegisterUserSerialiser(onlyStudents, many=True)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
+        return Response({"message": "Your not authorizated"}, status=status.HTTP_401_UNAUTHORIZED)
     def post(self, request: Request):
+        
         serializer = RegisterUserSerialiser(data=request.data)
 
         serializer.is_valid(raise_exception=True)
