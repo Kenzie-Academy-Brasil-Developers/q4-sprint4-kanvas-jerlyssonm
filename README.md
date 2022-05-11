@@ -425,7 +425,7 @@ nocontent
 
 ### Diagrama de Relacionamento
 
-<img src="https://i.imgur.com/2SfGBO0.png"/>
+<img src="https://i.imgur.com/QB7aUGS.png"/>
 
 # Relatório de testes 
 
