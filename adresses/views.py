@@ -19,8 +19,9 @@ class AddressView(APIView):
         serializer.is_valid(raise_exception=True)
 
         userOn = request.user
+    
+        address, _ = Address.objects.get_or_create(**serializer.validated_data)
 
-        address = Address.objects.create(**serializer.validated_data)
         address.save()
 
         userOn.address = address
